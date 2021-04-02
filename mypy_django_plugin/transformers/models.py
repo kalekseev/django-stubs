@@ -293,7 +293,8 @@ class AddRelatedManagers(ModelClassInitializer):
                     self.add_new_node_to_model_class(attname, parametrized_related_manager_type)
                     continue
 
-                name = related_model_cls.__name__ + "_" + "RelatedManager"
+                # name = related_model_cls.__name__ + "_" + "RelatedManager"
+                name = model_cls.__name__ + "_" + related_model_cls.__name__ + "_" + "RelatedManager"
                 bases = [parametrized_related_manager_type, default_manager_type]
                 new_related_manager_info = self.add_new_class_for_current_module(name, bases)
 
