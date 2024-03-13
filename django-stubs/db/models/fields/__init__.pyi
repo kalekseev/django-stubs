@@ -696,7 +696,6 @@ class SmallAutoField(AutoFieldMixin, SmallIntegerField[int]):
 _C = TypeVar("_C", bound=str | None)
 
 class CharField(Generic[_C], Field[_C | Combinable, _C]):
-    @overload
     def __new__(
         cls,
         verbose_name: str | None = ...,
@@ -726,39 +725,8 @@ class CharField(Generic[_C], Field[_C | Combinable, _C]):
         validators: Iterable[_ValidatorCallable] = ...,
         error_messages: _ErrorMessagesToOverride | None = ...,
     ) -> CharField[str]: ...
-    @overload
-    def __new__(
-        cls,
-        verbose_name: str | None = ...,
-        *,
-        name: str | None = ...,
-        primary_key: bool = ...,
-        max_length: int = ...,
-        db_collation: str | None = ...,
-        unique: bool = ...,
-        blank: bool = ...,
-        null: Literal[True],
-        db_index: bool = ...,
-        default: _C | Callable[[], _C] = ...,
-        db_default: _C | Func = ...,
-        editable: bool = ...,
-        auto_created: bool = ...,
-        serialize: bool = ...,
-        unique_for_date: str | None = ...,
-        unique_for_month: str | None = ...,
-        unique_for_year: str | None = ...,
-        choices: Iterable[tuple[_C, str] | tuple[str, Iterable[tuple[_C, str]]]]
-        | type[TextChoices] = ...,
-        help_text: str = ...,
-        db_column: str | None = ...,
-        db_comment: str | None = ...,
-        db_tablespace: str | None = ...,
-        validators: Iterable[_ValidatorCallable] = ...,
-        error_messages: _ErrorMessagesToOverride | None = ...,
-    ) -> CharField[str | None]: ...
 
 class SlugField(CharField[_C]):
-    @overload
     def __new__(
         cls,
         verbose_name: str | None = ...,
@@ -788,39 +756,8 @@ class SlugField(CharField[_C]):
         error_messages: _ErrorMessagesToOverride | None = ...,
         allow_unicode: bool = ...,
     ) -> SlugField[str]: ...
-    @overload
-    def __new__(
-        cls,
-        verbose_name: str | None = ...,
-        *,
-        name: str | None = ...,
-        primary_key: bool = ...,
-        max_length: int = ...,
-        db_collation: str | None = ...,
-        unique: bool = ...,
-        blank: bool = ...,
-        null: Literal[True],
-        db_index: bool = ...,
-        default: _C | Callable[[], _C] = ...,
-        db_default: _C | Func = ...,
-        editable: bool = ...,
-        auto_created: bool = ...,
-        serialize: bool = ...,
-        unique_for_date: str | None = ...,
-        unique_for_month: str | None = ...,
-        unique_for_year: str | None = ...,
-        choices: Iterable[tuple[_C, str] | tuple[str, Iterable[tuple[_C, str]]]] = ...,
-        help_text: str = ...,
-        db_column: str | None = ...,
-        db_comment: str | None = ...,
-        db_tablespace: str | None = ...,
-        validators: Iterable[_ValidatorCallable] = ...,
-        error_messages: _ErrorMessagesToOverride | None = ...,
-        allow_unicode: bool = ...,
-    ) -> SlugField[str | None]: ...
 
 class EmailField(CharField[_C]):
-    @overload
     def __new__(
         cls,
         verbose_name: str | None = ...,
@@ -849,38 +786,8 @@ class EmailField(CharField[_C]):
         validators: Iterable[_ValidatorCallable] = ...,
         error_messages: _ErrorMessagesToOverride | None = ...,
     ) -> EmailField[str]: ...
-    @overload
-    def __new__(
-        cls,
-        verbose_name: str | None = ...,
-        *,
-        name: str | None = ...,
-        primary_key: bool = ...,
-        max_length: int = ...,
-        db_collation: str | None = ...,
-        unique: bool = ...,
-        blank: bool = ...,
-        null: Literal[True],
-        db_index: bool = ...,
-        default: _C | Callable[[], _C] = ...,
-        db_default: _C | Func = ...,
-        editable: bool = ...,
-        auto_created: bool = ...,
-        serialize: bool = ...,
-        unique_for_date: str | None = ...,
-        unique_for_month: str | None = ...,
-        unique_for_year: str | None = ...,
-        choices: Iterable[tuple[_C, str] | tuple[str, Iterable[tuple[_C, str]]]] = ...,
-        help_text: str = ...,
-        db_column: str | None = ...,
-        db_comment: str | None = ...,
-        db_tablespace: str | None = ...,
-        validators: Iterable[_ValidatorCallable] = ...,
-        error_messages: _ErrorMessagesToOverride | None = ...,
-    ) -> EmailField[str | None]: ...
 
 class URLField(CharField[_C]):
-    @overload
     def __new__(
         cls,
         verbose_name: str | None = ...,
@@ -909,38 +816,8 @@ class URLField(CharField[_C]):
         validators: Iterable[_ValidatorCallable] = ...,
         error_messages: _ErrorMessagesToOverride | None = ...,
     ) -> URLField[str]: ...
-    @overload
-    def __new__(
-        cls,
-        verbose_name: str | None = ...,
-        *,
-        name: str | None = ...,
-        primary_key: bool = ...,
-        max_length: int = ...,
-        db_collation: str | None = ...,
-        unique: bool = ...,
-        blank: bool = ...,
-        null: Literal[True],
-        db_index: bool = ...,
-        default: _C | Callable[[], _C] = ...,
-        db_default: _C | Func = ...,
-        editable: bool = ...,
-        auto_created: bool = ...,
-        serialize: bool = ...,
-        unique_for_date: str | None = ...,
-        unique_for_month: str | None = ...,
-        unique_for_year: str | None = ...,
-        choices: Iterable[tuple[_C, str] | tuple[str, Iterable[tuple[_C, str]]]] = ...,
-        help_text: str = ...,
-        db_column: str | None = ...,
-        db_comment: str | None = ...,
-        db_tablespace: str | None = ...,
-        validators: Iterable[_ValidatorCallable] = ...,
-        error_messages: _ErrorMessagesToOverride | None = ...,
-    ) -> URLField[str | None]: ...
 
 class TextField(Generic[_C], Field[_C | Combinable, _C]):
-    @overload
     def __new__(
         cls,
         verbose_name: str | None = ...,
@@ -969,35 +846,6 @@ class TextField(Generic[_C], Field[_C | Combinable, _C]):
         validators: Iterable[_ValidatorCallable] = ...,
         error_messages: _ErrorMessagesToOverride | None = ...,
     ) -> TextField[str]: ...
-    @overload
-    def __new__(
-        cls,
-        verbose_name: str | None = ...,
-        *,
-        name: str | None = ...,
-        primary_key: bool = ...,
-        max_length: int | None = ...,
-        db_collation: str | None = ...,
-        unique: bool = ...,
-        blank: bool = ...,
-        null: Literal[True],
-        db_index: bool = ...,
-        default: _C | Callable[[], _C] = ...,
-        db_default: _C | Func = ...,
-        editable: bool = ...,
-        auto_created: bool = ...,
-        serialize: bool = ...,
-        unique_for_date: str | None = ...,
-        unique_for_month: str | None = ...,
-        unique_for_year: str | None = ...,
-        choices: Iterable[tuple[_C, str] | tuple[str, Iterable[tuple[_C, str]]]] = ...,
-        help_text: str = ...,
-        db_column: str | None = ...,
-        db_comment: str | None = ...,
-        db_tablespace: str | None = ...,
-        validators: Iterable[_ValidatorCallable] = ...,
-        error_messages: _ErrorMessagesToOverride | None = ...,
-    ) -> TextField[str | None]: ...
 
 _B = TypeVar("_B", bound=bool | None)
 
