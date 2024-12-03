@@ -39,11 +39,11 @@ class BaseConstraint:
     def clone(self) -> Self: ...
 
 class CheckConstraint(BaseConstraint):
-    check: Q
+    condition: Q
     def __init__(
         self,
         *,
-        check: Q,
+        condition: Q,
         name: str,
         violation_error_message: str | None = ...,
     ) -> None: ...
