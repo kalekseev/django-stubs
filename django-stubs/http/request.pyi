@@ -1,8 +1,8 @@
-from collections.abc import Iterable, Mapping
+from collections.abc import Awaitable, Callable, Iterable, Mapping
 from re import Pattern
 from typing import Any, BinaryIO, TypeAlias, TypeVar, overload
 
-from django.contrib.auth.models import _AnyUser
+from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, _AnyUser
 from django.contrib.sessions.backends.base import SessionBase
 from django.contrib.sites.models import Site
 from django.core.files import uploadedfile, uploadhandler
@@ -101,6 +101,7 @@ class HttpRequest:
     current_app: str
     # django.contrib.auth.middleware.AuthenticationMiddleware:
     user: _AnyUser
+    auser: Callable[[], Awaitable[AbstractBaseUser | AnonymousUser]]
     # django.contrib.sites.middleware.CurrentSiteMiddleware
     site: Site
     # django.contrib.sessions.middleware.SessionMiddleware
