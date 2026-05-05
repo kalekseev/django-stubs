@@ -1,6 +1,7 @@
 {
   "typeCheckingMode": "strict",
   "reportPrivateUsage": false,
+  "reportMissingTypeArgument": false,
   "reportMissingModuleSource": false,
   "reportUnnecessaryIsInstance": false,
   "reportUnnecessaryComparison": false,

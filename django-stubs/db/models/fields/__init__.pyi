@@ -7,23 +7,26 @@ from typing import Any, Generic, Literal, TypeAlias, TypeVar, overload
 
 from django.core.checks import CheckMessage
 from django.core.exceptions import FieldDoesNotExist as FieldDoesNotExist
-from django.db.models import IntegerChoices, Model, TextChoices
+from django.db.models import IntegerChoices, Model, Q, TextChoices
 from django.db.models.expressions import Col, Combinable, Func
 from django.db.models.query_utils import RegisterLookupMixin
 from django.forms import Widget
+from django.utils.choices import _Choice, _ChoiceNamedGroup, _ChoicesCallable
 from django.utils.functional import _StrOrPromise
 from typing_extensions import Self
 
 BLANK_CHOICE_DASH: list[tuple[str, str]] = ...
 
-_Choice: TypeAlias = tuple[Any, _StrOrPromise]
-_ChoiceNamedGroup: TypeAlias = tuple[str, Iterable[_Choice]]
 _ChoicesMapping: TypeAlias = Mapping[Any, _StrOrPromise | Mapping[Any, _StrOrPromise]]
 _LiteralFieldChoices: TypeAlias = Iterable[_Choice | _ChoiceNamedGroup] | _ChoicesMapping
 _FieldChoices: TypeAlias = _LiteralFieldChoices | Callable[[], _LiteralFieldChoices]
 
 _ValidatorCallable: TypeAlias = Callable[..., None]
 _ErrorMessagesToOverride: TypeAlias = dict[str, Any]
+
+_LimitChoicesTo: TypeAlias = Q | dict[str, Any]
+_LimitChoicesToCallable: TypeAlias = Callable[[], _LimitChoicesTo]
+_AllLimitChoicesTo: TypeAlias = _LimitChoicesTo | _LimitChoicesToCallable | _ChoicesCallable  # noqa: PYI047
 
 # __set__ value type
 _ST = TypeVar("_ST")

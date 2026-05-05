@@ -19,3 +19,8 @@ django-stubs/views/decorators/vary.pyi
 django-stubs/contrib/sitemaps/apps.pyi
 #django-stubs/contrib/gis/sitemaps/kml.pyi
 #django-stubs/contrib/flatpages/sitemaps.pyi
+django-stubs/db/models/utils.pyi
+django-stubs/forms/utils.pyi
+#django-stubs/forms/models.pyi
+#django-stubs/utils/choices.pyi
+#django-stubs/utils/datastructures.pyi
