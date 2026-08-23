@@ -10,12 +10,14 @@ from django.db.models.expressions import Combinable, OrderBy
 from django.db.models.sql.query import Query, RawQuery
 from django.db.models.utils import AltersData
 from django.utils.functional import cached_property
+from ty_extensions import Intersection
 from typing_extensions import Self, TypeVar, override
 
 _T = TypeVar("_T", covariant=True)
 _ContainsT = TypeVar("_ContainsT")
 _Model = TypeVar("_Model", bound=Model, covariant=True)
 _Row = TypeVar("_Row", covariant=True, default=_Model)  # ONLY use together with _Model
+_Annotations = TypeVar("_Annotations")
 _TupleT = TypeVar("_TupleT", bound=tuple[Any, ...], covariant=True)
 
 _OrderByFieldName: TypeAlias = str | Combinable | OrderBy
@@ -201,7 +203,13 @@ class QuerySet(AltersData, _SupportsContains[object], Iterable[_Row], Sized, Gen
     @overload
     def select_related(self, *fields: str) -> Self: ...
     def prefetch_related(self, *lookups: Any) -> Self: ...
-    def annotate(self, *args: Any, **kwargs: Any) -> Self: ...
+    # The outer Self preserves the Pyright fallback. The inner order lets ty refine the row and retain custom methods.
+    def annotate(
+        self, *args: Any, **kwargs: Any
+    ) -> Intersection[  # pyright: ignore[reportInvalidTypeVarUse]
+        Self,
+        Intersection[QuerySet[_Model, Intersection[_Row, _Annotations]], Self],
+    ]: ...
     def alias(self, *args: Any, **kwargs: Any) -> Self: ...
     def order_by(self, *field_names: _OrderByFieldName) -> Self: ...
     def distinct(self, *field_names: str) -> Self: ...

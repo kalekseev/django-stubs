@@ -66,6 +66,75 @@ This happens because these Django classes do not support [`__class_getitem__`](h
 
 ## usage
 
+### `QuerySet.annotate()` results with ty
+
+ty can combine a model row with a `Protocol` that contains attributes from `QuerySet.annotate()`.
+Declare the `Protocol`. Then declare the return type of the custom queryset method.
+
+```python
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Protocol
+
+from django.db import models
+
+if TYPE_CHECKING:
+    from ty_extensions import Intersection
+
+
+class HasDisplayName(Protocol):
+    display_name: str
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+
+
+class ProductQuerySet(models.QuerySet[Product]):
+    def with_display_name(
+        self,
+    ) -> models.QuerySet[Product, Intersection[Product, HasDisplayName]]:
+        return self.annotate(display_name=models.F("name"))
+```
+
+The return type supplies `HasDisplayName` to `annotate()`. The result keeps custom queryset methods.
+A direct call without an expected return type uses an unknown extra type.
+
+Pyright and mypy do not support intersection types. Add this fallback stub to a shared typings directory:
+
+```python
+# typings/ty_extensions.pyi
+from typing import TypeVar
+
+from typing_extensions import TypeAliasType
+
+_Base = TypeVar("_Base")
+_Extra = TypeVar("_Extra")
+
+Intersection = TypeAliasType(
+    "Intersection",
+    _Base,
+    type_params=(_Base, _Extra),
+)
+```
+
+Set the Pyright `stubPath` value to this directory:
+
+```json
+{
+  "stubPath": "typings"
+}
+```
+
+Set mypy's `mypy_path` value to the same directory:
+
+```ini
+[mypy]
+mypy_path = typings
+```
+
+The fallback reduces `Intersection[Base, Extra]` to `Base`. Pyright and mypy check base-model attributes but do not see the added attributes.
+
 ### ForeignKey ids and related names as properties in ORM models
 
 When defining a Django ORM model with a foreign key, like so:
