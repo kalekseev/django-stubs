@@ -135,6 +135,54 @@ mypy_path = typings
 
 The fallback reduces `Intersection[Base, Extra]` to `Base`. Pyright and mypy check base-model attributes but do not see the added attributes.
 
+### Custom queryset methods on managers with ty
+
+ty sees the methods of a custom queryset on a manager made with `QuerySet.as_manager()` or `Manager.from_queryset()`.
+Mypy and pyright see only the manager.
+
+```python
+class BookQuerySet(models.QuerySet["Book"]):
+    def published(self) -> "BookQuerySet":
+        return self.filter(published=True)
+
+
+class Book(models.Model):
+    published = models.BooleanField()
+
+    books = BookQuerySet.as_manager()
+    more_books = models.Manager.from_queryset(BookQuerySet)()
+
+
+Book.books.published()  # BookQuerySet
+Book.more_books.published()  # BookQuerySet
+```
+
+ty does not accept a call as a base class. A class like `class BookManager(models.Manager.from_queryset(BookQuerySet))` gets an unknown base.
+Declare the queryset as the second type argument and set `_queryset_class` instead:
+
+```python
+class BookManager(models.Manager["Book", BookQuerySet]):
+    _queryset_class = BookQuerySet
+
+    def published(self) -> BookQuerySet:
+        return self.get_queryset().published()
+```
+
+With `objects = BookManager()` on the model, chain calls such as `Book.objects.filter()` return `BookQuerySet` in ty, pyright and mypy.
+
+`_queryset_class` only changes the result of `get_queryset()`. Unlike `from_queryset()`, it does not copy the queryset methods to the manager.
+Without the `published()` method above, `Book.objects.published()` raises `AttributeError` at runtime, and the type checkers report an error.
+Call the method after a chain call, for example `Book.objects.all().published()`, or add a method to the manager that calls it, as above.
+
+`_queryset_class` is a private Django attribute. It is not in the Django documentation, and it can change without notice.
+To use only public API, override `get_queryset()` instead. The types are the same:
+
+```python
+class BookManager(models.Manager["Book", BookQuerySet]):
+    def get_queryset(self) -> BookQuerySet:
+        return BookQuerySet(self.model, using=self._db)
+```
+
 ### ForeignKey ids and related names as properties in ORM models
 
 When defining a Django ORM model with a foreign key, like so:

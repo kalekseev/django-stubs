@@ -4,10 +4,12 @@ from typing import Any, Generic, overload
 from django.db.models.base import Model
 from django.db.models.expressions import Combinable, OrderBy
 from django.db.models.query import QuerySet
+from ty_extensions import Intersection
 from typing_extensions import Self, TypeVar
 
 _T = TypeVar("_T", bound=Model)
 _V = TypeVar("_V", bound=Model)
+_QSC = TypeVar("_QSC", bound=QuerySet[Any, Any])
 # Manager proxies chain calls to get_queryset(), so they return the queryset, not the manager.
 _QS = TypeVar("_QS", bound=QuerySet[Any, Any], default=QuerySet[_T], covariant=True)
 
@@ -24,8 +26,11 @@ class BaseManager(QuerySet[_T], Generic[_T, _QS]):
         self,
     ) -> tuple[bool, str | None, str | None, tuple[Any, ...] | None, dict[str, Any] | None]: ...
     def check(self, **kwargs: Any) -> list[Any]: ...
+    # ty sees the queryset's own methods on the manager. mypy and pyright see only Self.
     @classmethod
-    def from_queryset(cls, queryset_class: type[QuerySet[_T]], class_name: str | None = ...) -> type[Self]: ...
+    def from_queryset(
+        cls, queryset_class: Intersection[type[QuerySet[_T]], type[_QSC]], class_name: str | None = ...
+    ) -> type[Intersection[Self, _QSC]]: ...
     @classmethod
     def _get_queryset_methods(cls, queryset_class: type[QuerySet[_T]]) -> dict[str, Callable[..., Any]]: ...
     def contribute_to_class(self, model: type[Model], name: str) -> None: ...

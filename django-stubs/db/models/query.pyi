@@ -72,8 +72,9 @@ class QuerySet(AltersData, _SupportsContains[object], Iterable[_Row], Sized, Gen
         using: str | None = None,
         hints: dict[str, Model] | None = None,
     ) -> None: ...
+    # ty sees the queryset's own methods on the manager. mypy and pyright see only the Manager.
     @classmethod
-    def as_manager(cls) -> Manager[_Model]: ...  # ty: ignore[invalid-generic-class]
+    def as_manager(cls) -> Intersection[Manager[_Model, Self], Self]: ...  # ty: ignore[invalid-generic-class]
     def __deepcopy__(self, memo: dict[int, Any]) -> Self: ...
     if sys.version_info >= (3, 11):
         @override
