@@ -7,6 +7,9 @@ from django.db.models.fields import Field
 from django.db.models.fields.mixins import FieldCacheMixin
 from django.db.models.fields.related import OneToOneField, RelatedField
 from django.db.models.fields.reverse_related import ManyToManyRel, OneToOneRel
+
+# Re-exported for compatibility with django-stubs, which defines RelatedManager here.
+from django.db.models.manager import RelatedManager as RelatedManager
 from django.db.models.query import QuerySet
 
 _T = TypeVar("_T")
