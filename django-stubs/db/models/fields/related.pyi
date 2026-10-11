@@ -63,7 +63,13 @@ class RelatedField(FieldCacheMixin, Field[_ST, _GT], Generic[_ST, _GT]):
 
 _M = TypeVar("_M", bound=Model | None, default=Any)
 
-class ForeignObject(RelatedField[_M, _M], Generic[_M]):
+# Keep this initializer inherited so mypy still uses the __new__ overloads.
+# Solving _M here avoids ty combining an inferred model with the default Any.
+# Upstream: https://github.com/astral-sh/ty/issues/3009
+class _ForeignObjectInit(Generic[_M]):
+    def __init__(self, to: type[_M] | str, *args: Any, **kwargs: Any) -> None: ...
+
+class ForeignObject(_ForeignObjectInit[_M], RelatedField[_M, _M], Generic[_M]):
     remote_field: ForeignObjectRel  # pyright: ignore[reportIncompatibleVariableOverride]
     one_to_many: Literal[  # pyright: ignore[reportIncompatibleVariableOverride]
         False
