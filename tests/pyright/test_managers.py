@@ -16,3 +16,17 @@ def wrong(manager: Manager[Model], qs: QuerySet[Model]) -> None:
 """)
     error_lines = {r.line for r in results if r.type == "error"}
     assert {4, 6, 7, 8, 9, 10} <= error_lines, results
+
+
+def test_declared_managers_reject_model_instance_access() -> None:
+    results = run_pyright("""\
+from django.db.models import Manager, Model
+
+class Book(Model):
+    objects = Manager["Book"]()
+
+Book.objects.get()
+Book().objects.get()
+""")
+    error_lines = {r.line for r in results if r.type == "error"}
+    assert error_lines == {7}, results
