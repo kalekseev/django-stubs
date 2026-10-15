@@ -1,13 +1,19 @@
 from contextlib import ContextDecorator
 from types import TracebackType
-from typing import Any
+from typing import Any, overload
 
 from django.http.request import HttpRequest
 from django.utils.functional import _StrPromise
+from typing_extensions import LiteralString
 
 class TranslatorCommentWarning(SyntaxWarning): ...
 
 def gettext_noop(message: str) -> str: ...
+
+# Translation catalogs are trusted like source literals; dynamic messages remain str.
+@overload
+def gettext(message: LiteralString) -> LiteralString: ...
+@overload
 def gettext(message: str) -> str: ...
 def ngettext(singular: str, plural: str, number: float) -> str: ...
 def pgettext(context: str, message: str) -> str: ...
